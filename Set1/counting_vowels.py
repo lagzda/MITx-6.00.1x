@@ -1,3 +1,5 @@
+#The title of this function is pretty self-explanatory
+
 def count_vowels(s):
     # Initialise the counter to zero
     vowels = 0
