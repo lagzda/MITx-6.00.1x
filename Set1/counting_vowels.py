@@ -1,4 +1,4 @@
-#The title of this function is pretty self-explanatory
+#The title of this function is pretty self-explanatory (lowercase string assumed)
 
 def count_vowels(s):
     # Initialise the counter to zero

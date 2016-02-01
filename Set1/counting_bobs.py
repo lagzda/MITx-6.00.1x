@@ -1,3 +1,5 @@
+#The title of this function is pretty self-explanatory (lowercase string assumed)
+
 def count_bobs(s):
     # Initialise the length of the string and bob counter to 0
     s_len = len(s)
