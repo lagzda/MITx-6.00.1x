@@ -23,25 +23,25 @@ def compChooseWord(hand, wordList, n):
 
     returns: string or None
     """
-    # BEGIN PSEUDOCODE <-- Remove this comment when you code this function; do your coding within the pseudocode (leaving those comments in-place!)
     # Create a new variable to store the maximum score seen so far (initially 0)
-
+    best_score = 0
     # Create a new variable to store the best word seen so far (initially None)  
-
+    best_word = None
     # For each word in the wordList
-
+    for word in wordList:
         # If you can construct the word from your hand
+        if isValidWord(word, hand, wordList):
         # (hint: you can use isValidWord, or - since you don't really need to test if the word is in the wordList - you can make a similar function that omits that test)
 
             # Find out how much making that word is worth
-
+            points = getWordScore(word, n)
             # If the score for that word is higher than your best score
-
+            if points > best_score:
                 # Update your best score, and best word accordingly
-
-
+                best_score = points
+                best_word = word
     # return the best word you found.
-
+    return best_word
 
 #
 # Problem #7: Computer plays a hand
@@ -65,7 +65,36 @@ def compPlayHand(hand, wordList, n):
     wordList: list (string)
     n: integer (HAND_SIZE; i.e., hand size required for additional points)
     """
-    # TO DO ... <-- Remove this comment when you code this function
+    # Keep track of the total score
+    score = 0
+    # As long as there are still letters left in the hand:
+    while calculateHandlen(hand) > 0:
+        # Display the hand
+        print "Current Hand: ", displayHand(hand)
+        # Ask user for input
+        word = compChooseWord(hand, wordList, n)
+        # If the input is a single period:
+        if word == None:
+            # End the game (break out of the loop)
+            break  
+        # Otherwise (the input is not a single period):
+        else:
+            # If the word is not valid:
+            if not isValidWord(word, hand, wordList):
+                # Reject invalid word (print a message followed by a blank line)
+                print "Invalid word, please try again."
+                print
+            # Otherwise (the word is valid):
+            else:
+                # Tell the user how many points the word earned, and the updated total score, in one line followed by a blank line
+                points = getWordScore(word, n)
+                score += points
+                print '"%s" earned %i points. Total: %i points' % (word, points, score)
+                print
+                # Update the hand 
+                hand = updateHand(hand, word)
+    # Game is over (user entered a '.' or ran out of letters), so tell user the total score
+    print "Run out of letters. Total score: %i points." % score
     
 #
 # Problem #8: Playing a game
@@ -95,8 +124,39 @@ def playGame(wordList):
 
     wordList: list (string)
     """
-    # TO DO... <-- Remove this comment when you code this function
-    print "playGame not yet implemented." # <-- Remove this when you code this function
+    while (True):
+        choice = raw_input("Enter n to deal a new hand, r to replay the last hand, or e to end game: ")
+        if choice == "e":
+            break
+        elif choice == "r":
+            # Try to play previous hand
+            try:
+                player_play(hand, wordList, HAND_SIZE)
+            # Catch the error which would appear if user hasn't played any hands. Yell at user!   
+            except:    
+                print "You have not played a hand yet. Please play a new hand first!"
+                continue
+        # Else if user entered n - let him play a new hand
+        elif choice == "n":
+            hand = dealHand(HAND_SIZE)
+            player_play(hand, wordList, HAND_SIZE)       
+        
+        else:
+            print "Invalid command."
+# Helper function to play hand depending on who the player is        
+def player_play(hand, wordList, n):
+    while True:
+        try:
+            player = raw_input("Enter u to have yourself play, c to have the computer play: ")
+            assert player == "c" or player == "u"
+            if player == "u":
+                playHand(hand, wordList, n)
+            elif player == "c":
+                compPlayHand(hand, wordList, n)
+            break    
+        except:
+            print "Invalid command."
+    
 
         
 #
